@@ -1,0 +1,16 @@
+#!/bin/bash
+
+ip="10.22.33."$(expr $(cat last-ip.txt | tr "." " " | awk '{print $4}') + 1)
+echo $ip > last-ip.txt
+clientn=$(cat last-ip.txt | tr "." " " | awk '{printf("%02d\n", $4)}')
+echo "Creating client config for: $ip"
+
+wg genkey | tee client$clientn\_priv | wg pubkey > client$clientn\_pub
+key=$(cat client$clientn\_priv)
+key2=$(cat client$clientn\_pub)
+SERVER_PUB_KEY=$(cat server_public_key)
+
+cat setup_client | sed -e 's/CLIENTIP/'"$ip"'/' | sed -e 's|CLIENTPRIVKEY|'"$key"'|' | sed -e 's|SERVERPUBKEY|'"$SERVER_PUB_KEY"'|' > client$clientn\_setup
+cat setup_wg0 | sed -e 's/CLIENTN/'"$clientn"'/' | sed -e 's/CLIENTIP/'"$ip"'/' | sed -e 's|CLIENTPUBKEY|'"$key2"'|' >> wg0.conf
+
+qrencode -t ansiutf8 < client$clientn\_setup
