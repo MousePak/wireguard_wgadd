@@ -1,0 +1,11 @@
+#configCLIENTN
+[Interface]
+Address = CLIENTIP/32
+PrivateKey = CLIENTPRIVKEY
+DNS = 8.8.8.8
+
+[Peer]
+PublicKey = SERVERPUBKEY
+Endpoint = ###.###.###.###:###
+AllowedIPs = 0.0.0.0/0, ::/0
+PersistentKeepalive = 21
