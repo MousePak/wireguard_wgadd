@@ -1,0 +1,4 @@
+#configCLIENTN
+[Peer]
+PublicKey = CLIENTPUBKEY
+AllowedIPs = CLIENTIP/32
